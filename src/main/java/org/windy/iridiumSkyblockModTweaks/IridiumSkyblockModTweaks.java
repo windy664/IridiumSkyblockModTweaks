@@ -101,7 +101,7 @@ public final class IridiumSkyblockModTweaks extends JavaPlugin implements Listen
         }
         return null; // 如果没有非禁用物品则返回 null
     }
-
+/*
     @EventHandler
     public void onPlayerItemHeld(PlayerItemHeldEvent event) {
         Location location = event.getPlayer().getLocation();
@@ -126,6 +126,7 @@ public final class IridiumSkyblockModTweaks extends JavaPlugin implements Listen
             }
         }
     }
+    */
 
 
     @EventHandler

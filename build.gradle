@@ -15,11 +15,13 @@ repositories {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/groups/public/"
     }
+    maven("https://nexus.iridiumdevelopment.net/repository/maven-releases/")
 }
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
     compileOnly fileTree(dir: 'libs', include: ['*.jar'])
+    compileOnly("com.iridium", "IridiumSkyblock", "LATEST")
 }
 
 def targetJavaVersion = 17

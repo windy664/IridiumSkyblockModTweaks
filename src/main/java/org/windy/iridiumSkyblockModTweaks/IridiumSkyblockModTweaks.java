@@ -113,9 +113,7 @@ public final class IridiumSkyblockModTweaks extends JavaPlugin implements Listen
         User user = IridiumSkyblockAPI.getInstance().getUser(player);
         Island island = user.getCurrentIsland().get();
         ItemStack newItem = player.getInventory().getItemInMainHand(); // 获取玩家主手中的物品
-        String notprvent = PlaceholderAPI.setPlaceholders(player, "%iridiumskyblock_current_owner%");
         boolean canBreakBlocks = IridiumSkyblockAPI.getInstance().getIslandPermission(island, user, PermissionType.BLOCK_BREAK);
-        log(notprvent);
 
         if (player.isOp()) {
             return;
@@ -132,59 +130,27 @@ public final class IridiumSkyblockModTweaks extends JavaPlugin implements Listen
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-        Location location = player.getLocation();
+        Location location = event.getPlayer().getLocation();
         String worldName = Objects.requireNonNull(location.getWorld()).getName();
-
-        // 添加日志，查看当前世界和事件动作
-        log("玩家 " + player.getName() + " 当前所在世界: " + worldName);
-
         if (!island_worlds.contains(worldName)) {
-            log("世界 " + worldName + " 不在岛屿世界列表中，忽略该事件。");
             return;
         }
-
+        Player player = event.getPlayer();
         User user = IridiumSkyblockAPI.getInstance().getUser(player);
-        Optional<Island> optionalIsland = user.getCurrentIsland();
-
-        if (!optionalIsland.isPresent()) {
-            log("玩家 " + player.getName() + " 没有岛屿，忽略该事件。");
-            return;
-        }
-
-        Island island = optionalIsland.get();
-
-        // 检查是否为右键点击事件以及是否按下蹲下键
+        Island island = user.getCurrentIsland().get();
+        // 检查岛屿是否存在以及玩家是否有权限
         if (event.useInteractedBlock() != Event.Result.DENY &&
                 event.useItemInHand() != Event.Result.DENY &&
                 !event.getAction().name().contains("RIGHT_CLICK")) {
             return;
         }
-
-        // 添加日志：玩家点击了方块，检查是否蹲下
-        log("玩家 " + player.getName() + " 执行了右键交互。");
-
-        // 先判断玩家是否在蹲下
-        if (player.isSneaking()) {
-            log("玩家 " + player.getName() + " 正在蹲下，取消右键事件。");
-            event.setCancelled(true);  // 取消事件，防止任何右键交互
-            return;
-        }
-
-        // 禁用蹲下右键使用扳手
-        if (event.getItem() != null && event.getItem().getType().toString().contains("WRENCH")) {
-            log("玩家 " + player.getName() + " 正在尝试使用扳手，取消该事件。");
-            event.setCancelled(true);
-            return;  // 如果是使用扳手，取消事件
-        }
-
-        // 检查岛屿是否存在以及玩家是否有权限
-        boolean canBreakBlocks = IridiumSkyblockAPI.getInstance().getIslandPermission(island, user, PermissionType.BLOCK_BREAK);
-
-        if (!canBreakBlocks) {
-            event.setUseItemInHand(Event.Result.DENY);
-            event.setCancelled(true);
-            log("玩家 " + player.getName() + " 在该岛屿上没有破坏方块的权限，事件已取消。");
+        if (island != null) {
+            boolean canBreakBlocks = IridiumSkyblockAPI.getInstance().getIslandPermission(island, user, PermissionType.BLOCK_BREAK);
+            // 如果没有权限，取消事件（例如不能破坏方块）
+            if (!canBreakBlocks) {
+                event.setUseItemInHand(Event.Result.DENY);
+                event.setCancelled(true);
+            }
         }
     }
     @EventHandler

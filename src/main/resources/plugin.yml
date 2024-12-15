@@ -1,0 +1,7 @@
+name: IridiumSkyblockModTweaks
+version: '1.0-SNAPSHOT'
+main: org.windy.iridiumSkyblockModTweaks.IridiumSkyblockModTweaks
+api-version: '1.20'
+depend:
+  - IridiumSkyblock
+  - PlaceholderAPI

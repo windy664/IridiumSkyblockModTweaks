@@ -15,7 +15,7 @@ repositories {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/groups/public/"
     }
-    maven("https://nexus.iridiumdevelopment.net/service/rest/repository/browse/maven-releases/com/iridium/IridiumSkyblock/")
+    maven("https://nexus.iridiumdevelopment.net/service/rest/repository/browse/maven-releases/")
 }
 
 dependencies {
